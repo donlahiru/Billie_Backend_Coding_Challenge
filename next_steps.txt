@@ -1,0 +1,4 @@
+ 1. first need to implement proper authentication solution
+ 2. next after collecting money and updating the invoice then order should checkout.
+ 3. need a api for get all invoices by status for reporting purpose.
+ 4. can develop a dashboard for both seller and bellie company to view their statistics 
