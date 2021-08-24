@@ -17,7 +17,6 @@ class CreateInvoices extends Migration
             $table->id();
             $table->string('invoice_no',10);
             $table->foreignId('company_id');
-            $table->foreignId('invoice_debtor_id');
             $table->decimal('total_amount',10,2)->default(0.00);
             $table->enum('status',array( 'processing', 'paid', 'declined'));
             $table->text('remarks')->nullable();

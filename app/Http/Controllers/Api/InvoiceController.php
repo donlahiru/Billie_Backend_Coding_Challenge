@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\CompanyService as CompanyService;
+use App\Services\InvoiceService as InvoiceService;
 
-class CompanyController extends Controller
+class InvoiceController extends Controller
 {
     public function __construct(Request $request)
     {
         $this->_request = $request;
     }
 
-    public function store(CompanyService $companyService)
+    public function store(InvoiceService $invoiceService)
     {
         try {
-            $validator = $companyService->validator($this->_request->all());
+            $validator = $invoiceService->validator($this->_request->all());
 
             if($validator->fails()) {
                 return response()->json([
@@ -25,7 +25,16 @@ class CompanyController extends Controller
                 ],400);
             }
 
-            $result = $companyService->create($validator->getData());
+            $checkDebtorLimit = $invoiceService->checkDebtorLimitExceed($validator->getData());
+
+            if($checkDebtorLimit['error']) {
+                return response()->json([
+                    'error' => true,
+                    'message' => "debtor limit ".$checkDebtorLimit['limit']." exceeded."
+                ],400);
+            }
+
+            $result = $invoiceService->create($validator->getData());
             if($result) {
                 return response()->json([
                     'error' => false,
@@ -37,41 +46,6 @@ class CompanyController extends Controller
                     'message' => 'error in saving.'
                 ],400);
             }
-
-        } catch (\Exception $e){
-            return response()->json([
-                'error' => true,
-                'message' => $e->getMessage()
-            ],401);
-        }
-
-    }
-
-    public function update($id, CompanyService $companyService)
-    {
-        try {
-            $validator = $companyService->validator($this->_request->all());
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'error' => true,
-                    'message' => $validator->errors()->toArray()
-                ], 400);
-            }
-
-            $result = $companyService->update($id, $validator->getData());
-            if($result) {
-                return response()->json([
-                    'error' => false,
-                    'message' => 'Successfully updated.'
-                ], 200);
-            } else {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Error in updating.'
-                ], 400);
-            }
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -80,21 +54,34 @@ class CompanyController extends Controller
         }
     }
 
-    public function destroy($id, CompanyService $companyService)
+    public function update($id, InvoiceService $invoiceService)
     {
         try {
-            $result = $companyService->delete($id);
+            $validator = $invoiceService->updateValidator($this->_request->all());
 
-            if($result) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => true,
+                    'message' => $validator->errors()->toArray()
+                ], 400);
+            }
+
+            $result = $invoiceService->update($id, $validator->getData());
+            if(isset($result['error'])) {
                 return response()->json([
                     'error' => false,
-                    'message' => 'Successfully deleted.'
-                ], 200);
+                    'message' => $result['message']
+                ],400);
+            } else if(!$result){
+                return response()->json([
+                    'error' => true,
+                    'message' => 'error in updating.'
+                ],400);
             } else {
                 return response()->json([
                     'error' => true,
-                    'message' => 'Error in deleting.'
-                ], 400);
+                    'message' => 'Successfully updated.'
+                ],200);
             }
         } catch (\Exception $e) {
             return response()->json([

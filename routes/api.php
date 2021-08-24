@@ -21,4 +21,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('companies', 'Api\CompanyController@store');
     Route::put('companies/{id}', 'Api\CompanyController@update');
     Route::delete('companies/{id}', 'Api\CompanyController@destroy');
+
+    Route::post('invoices', 'Api\InvoiceController@store');
+    Route::put('invoices/{id}', 'Api\InvoiceController@update');
 });

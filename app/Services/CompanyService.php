@@ -2,7 +2,7 @@
 namespace App\Services;
 
 use Validator;
-use App\Models\Company as Company;
+use App\Models\Company;
 use Illuminate\Validation\Rule;
 
 class CompanyService

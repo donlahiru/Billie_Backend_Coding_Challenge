@@ -23,4 +23,9 @@ class Company extends Model
         'status'
     ];
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
 }
