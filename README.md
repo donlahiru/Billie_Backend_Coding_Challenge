@@ -1,61 +1,162 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Bellie
+A web service for bellie company to handle seller invoices.
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+#### Requirements
+```bash
+php 7.3 or higher
+```
 
-## About Laravel
+#### Installation
+install the dependencies.
+```bash
+composer install
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+rename .env.example to .env and add DB credentials
+```bash
+DB_USERNAME=
+DB_PASSWORD=
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+key generate.
+```bash
+php artisan key:generate 
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+run migrations
+```bash
+php artisan migrate
+```
 
-## Learning Laravel
+run seeders
+```bash
+php artisan db:seed
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+to create "personal access" and "password grant" clients which will be used to generate access tokens
+```bash
+php artisan passport:install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+When deploying Passport to your application's servers for the first time, you will likely need to run the passport:keys command.
+```bash
+php artisan passport:keys
+```
 
-## Laravel Sponsors
+Run server
+```bash
+php artisan serve
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#### Testing
+Run unit Test before need sqlite3 php extension
+```bash
+vendor/bin/phpunit
+```
 
-### Premium Partners
+## API Doc
+for login, use existing user credentials as
+```bash
+{
+    "email":"admin@admin.com",
+    "password":"admin123"
+}
+```
+login API method `POST`
+```bash
+http://127.0.0.1:8000/api/login
+```
+in response 
+```sh
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiY2I1NjhlYmM5MDBlNWMxOWQ2MGNmMGE5ZmY3MjU5NzgzOTgyMzAwNDJiMGE3YWE4Y2RmOTI0MTFiOThiNzRlODEyZGU1NzY0NWU5MDAxYTYiLCJpYXQiOjE2Mjk4MzM3MTAsIm5iZiI6MTYyOTgzMzcxMCwiZXhwIjoxNjYxMzY5NzEwLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.JX-jUJ79b9JyMb3X3Zszt6poF_FMPOTA5ol5C2rx13ctFinyt5IEAKeLwKlpWThxMvKZi3FzZ2ufLUGkm2l1GQEPBhgaiU0gYlStqNPD6CXRa6X16pSu4oCjQonTk0QsiPXoqipNlxu79GCp92pk_B6Oa5lfnk6_bw86EKVE2W4QLmajRbfYwHifZzbbU5tqg_TnsEbLBKYrgsGsV7TKAaUcXgrgxUVnP_LB8dCjPjofZhu9mufee7YX-BiLHBij2RcQS3awVK_FXbafjrvRQKrxzrDTlUUslbu2rIXCwDZKlZBMG5-Jo1FA35XAntfOkyhsNzzg8Zbi3DhOog1e_KvCwntCX9P2xQFHZTkt0NGXM8JRtkpKG4M9rDHNT9W0WRFRvYbV-gJPjCEqfaaDAEItwSVIk_H5NOtUdhCc708f1C5GbIzuMpJ7FYyhNTczHT0yLR5yQv3gCFGZtMT8US_WPdnEzcxiPrZuyGggrNdtuBn9DzJ4g9zGm_p5BSQvUJmlOrfPC1Q3yxf6YulZmQxR2JxXiJ8wUBlwfePi3t2ynuaJYlLhvH7UR1UiIWJI0Htan0rLVXzsAOP2niQq7lc8He4c6mtzERTcL-OnJhPYKTnYwi7HnY-x1h1TTDRowEHEBaTzlO3Temr26bzJCv8N3R9CtPZY1EP2VM_na5E"
+}
+```
+need to get the access_token and and send every other API's header as
+```bash
+key = Authorization
+value = Bearer ${access_token}
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+Add company API method `POST`
+```bash
+http://127.0.0.1:8000/api/companies
+```
+request body
+```bash
+{
+    "name":"abc",
+    "address_street":"street 1",
+    "address_zip_code":"123123",
+    "address_city":"colombo",
+    "address_country":"sri lanka",
+    "debtor_limit":100000,
+    "status":"active"
+}
+```
+Update company API method `PUT`
+```bash
+http://127.0.0.1:8000/api/companies/${saved_company_id}
+```
+request body
+```bash
+{
+    "name":"abc",
+    "address_street":"street 2",
+    "address_zip_code":"121212",
+    "address_city":"colombo7",
+    "address_country":"sri lanka",
+    "debtor_limit":200000,
+    "status":"active"
+}
+```
+Delete company Api method `DELETE`
+```bash
+http://127.0.0.1:8000/api/companies/${saved_company_id}
+```
 
-## Contributing
+Add invoices API method `POST`
+```bash
+http://127.0.0.1:8000/api/invoices
+```
+request body
+```bash
+{
+    "company_id" : ${saved_company_id},
+    "debtor" : {
+       "name" : "test debtor",
+       "address_street" : "street 1",
+       "address_zip_code" : 222222,
+       "address_city" : "new york",
+       "address_country" : "USA"
+    },
+    "items" : [
+        {
+            "item_description" : "test item1",
+            "quantity" : 10,
+            "amount" : 1000
+        },
+        {
+            "item_description" : "test item2",
+            "quantity" : 3,
+            "amount" : 3000
+        }
+    ]
+}
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Update invoice API method `PUT`
+```bash
+http://127.0.0.1:8000/api/invoices/${saved_invoice_id}
+```
+request body
+```bash
+{
+    "status" : "paid",
+    "remarks" : "this is successfully paid"
+}
+```
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
+> Note: `status should be 'paid','declined'` is required 
 ## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT
