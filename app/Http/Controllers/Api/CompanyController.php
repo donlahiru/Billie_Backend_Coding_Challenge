@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Services\CompanyService as CompanyService;
 
@@ -46,14 +45,13 @@ class CompanyController extends Controller
                 ],200);
             }
 
-            
         } catch (\Exception $e){
             return response()->json([
                 'error' => true,
                 'message' => $e->getMessage()
             ],401);
         }
-        
+
     }
 
     /**
